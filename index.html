@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECO TIMAURE, C.A. - Manual de Procedimientos</title>
+    <style>
+        :root {
+            --primary-green: #2d6a4f;
+            --water-green: #74c69d;
+            --light-green: #d8f3dc;
+            --dark-green: #1b4332;
+            --text-dark: #333;
+            --bg-light: #f4f9f4;
+            --bg-white: #ffffff;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0; padding: 0;
+            background-color: var(--bg-white);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* Navegación Fija */
+        nav {
+            background-color: var(--dark-green);
+            position: fixed; top: 0; width: 100%;
+            z-index: 100; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        nav .nav-inner {
+            display: flex; align-items: center; justify-content: space-between;
+            max-width: 1200px; margin: 0 auto; padding: 0 1.5rem;
+        }
+
+        nav .nav-logo {
+            display: flex; align-items: center; gap: 0.6rem;
+            color: white; font-weight: bold; font-size: 1rem;
+        }
+
+        nav .nav-logo img {
+            height: 42px; width: 42px; border-radius: 50%;
+            background: white; padding: 3px; object-fit: contain;
+        }
+
+        nav ul {
+            list-style: none; margin: 0; padding: 0;
+            display: flex; justify-content: center;
+        }
+
+        nav ul li a {
+            display: block; padding: 1rem 2rem;
+            color: white; text-decoration: none;
+            font-weight: bold; transition: background-color 0.3s;
+        }
+
+        nav ul li a:hover { background-color: var(--primary-green); }
+
+        /* Cabecera Principal */
+        header {
+            background:
+                radial-gradient(circle, rgba(255,255,255,0.06) 1.4px, transparent 1.4px) 0 0/26px 26px,
+                linear-gradient(160deg, var(--dark-green), var(--primary-green));
+            color: white;
+            text-align: center; padding: 6rem 1rem 5rem 1rem;
+            position: relative;
+        }
+
+        .wave-divider {
+            display: block; width: 100%; height: 70px;
+            margin-bottom: -6px; /* evita línea fantasma entre secciones */
+        }
+
+        /* Paneles */
+        .panel {
+            padding: 4rem 2rem; background-color: var(--bg-white);
+            background-image: radial-gradient(circle, #e3f0e7 1.4px, transparent 1.4px);
+            background-size: 22px 22px;
+        }
+        .panel.panel-alt {
+            background-color: var(--bg-light);
+            background-image: radial-gradient(circle, #cfe6d6 1.4px, transparent 1.4px);
+            background-size: 22px 22px;
+            border-top: 1px solid #e0ebe0; border-bottom: 1px solid #e0ebe0;
+        }
+
+        /* Franja de llamada a la acción */
+        .cta-band {
+            position: relative; text-align: center; color: white;
+            padding: 4rem 1.5rem; overflow: hidden;
+            background: linear-gradient(160deg, var(--dark-green), var(--primary-green));
+        }
+        .cta-band::before {
+            content: ''; position: absolute; inset: -20px;
+            background: url('trabajo-altura-1.jpeg') center 20%/cover no-repeat;
+            filter: blur(6px) saturate(0.9); transform: scale(1.05);
+            opacity: 0.35; z-index: 0;
+        }
+        .cta-band::after {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(160deg, rgba(27,67,50,0.88), rgba(45,106,79,0.85));
+            z-index: 0;
+        }
+        .cta-band h2, .cta-band p, .cta-band .cta-button {
+            position: relative; z-index: 1;
+        }
+        .cta-band h2 { margin-top: 0; font-size: 1.8rem; }
+        .cta-band p { max-width: 600px; margin: 0.8rem auto 1.8rem auto; opacity: 0.95; }
+        .cta-button {
+            display: inline-block; background: var(--water-green); color: var(--dark-green);
+            font-weight: bold; padding: 0.9rem 2rem; border-radius: 30px;
+            text-decoration: none; transition: transform 0.2s, background-color 0.2s;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.25);
+        }
+        .cta-button:hover { background: var(--light-green); transform: translateY(-3px); }
+
+        .container { max-width: 1000px; margin: 0 auto; }
+        .container-wide { max-width: 1200px; margin: 0 auto; overflow-x: auto; }
+
+        .panel-title {
+            color: var(--dark-green); text-align: center;
+            margin-bottom: 2.5rem; font-size: 2rem;
+            border-bottom: 3px solid var(--water-green);
+            display: inline-block; padding-bottom: 0.5rem;
+        }
+
+        .text-center { text-align: center; }
+
+        /* Grid de Tarjetas */
+        .info-grid {
+            display: grid; gap: 1.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+
+        .card {
+            background: var(--bg-white); padding: 1.5rem; border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border-top: 4px solid var(--water-green);
+            transition: transform 0.3s;
+        }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 6px 12px rgba(0,0,0,0.1); }
+
+        /* =========================================
+           NUEVO SISTEMA DE ORGANIGRAMA EN ÁRBOL
+           ========================================= */
+        .tree ul {
+            padding-top: 20px; position: relative;
+            transition: all 0.5s; display: flex; justify-content: center;
+            padding-left: 0;
+        }
+
+        .tree li {
+            float: left; text-align: center;
+            list-style-type: none; position: relative;
+            padding: 20px 10px 0 10px; transition: all 0.5s;
+        }
+
+        /* Líneas de conexión */
+        .tree li::before, .tree li::after {
+            content: ''; position: absolute; top: 0; right: 50%;
+            border-top: 2px solid var(--primary-green);
+            width: 50%; height: 20px;
+        }
+        .tree li::after {
+            right: auto; left: 50%;
+            border-left: 2px solid var(--primary-green);
+        }
+
+        /* Limpieza de líneas en extremos y elementos únicos */
+        .tree li:only-child::after, .tree li:only-child::before { display: none; }
+        .tree li:only-child { padding-top: 0; }
+        .tree li:first-child::before, .tree li:last-child::after { border: 0 none; }
+        
+        .tree li:last-child::before {
+            border-right: 2px solid var(--primary-green);
+            border-radius: 0 5px 0 0;
+        }
+        .tree li:first-child::after {
+            border-radius: 5px 0 0 0;
+        }
+
+        /* Línea vertical descendente */
+        .tree ul ul::before {
+            content: ''; position: absolute; top: 0; left: 50%;
+            border-left: 2px solid var(--primary-green);
+            width: 0; height: 20px; margin-left: -1px;
+        }
+
+        /* Estilo de los nodos interactivos */
+        .org-node {
+            background-color: var(--water-green); color: var(--dark-green);
+            padding: 1rem; border-radius: 8px; font-weight: bold;
+            text-align: center; cursor: pointer; width: 160px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); display: inline-block;
+            border: 2px solid var(--primary-green);
+            transition: transform 0.2s, background-color 0.2s;
+            font-size: 0.9rem; margin: 0 auto;
+        }
+
+        .org-node:hover {
+            transform: translateY(-5px); background-color: var(--light-green);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%; background: rgba(0,0,0,0.6);
+            justify-content: center; align-items: center; z-index: 1000;
+        }
+
+        .modal-content {
+            background: white; padding: 2.5rem; border-radius: 8px;
+            max-width: 600px; width: 90%; border-top: 5px solid var(--primary-green);
+            position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            max-height: 80vh; overflow-y: auto;
+        }
+
+        .close-btn {
+            position: absolute; top: 15px; right: 20px; font-size: 1.5rem;
+            cursor: pointer; color: var(--text-dark); background: none; border: none;
+        }
+
+        .tag {
+            display: inline-block; background: var(--light-green);
+            color: var(--dark-green); padding: 0.2rem 0.5rem;
+            border-radius: 4px; font-size: 0.8rem; margin-bottom: 1rem; font-weight: bold;
+        }
+
+        /* Galería de trabajo */
+        .gallery-grid {
+            display: grid; gap: 1.2rem;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        }
+        .gallery-item {
+            position: relative; overflow: hidden; border-radius: 8px;
+            height: 260px; box-shadow: 0 4px 6px rgba(0,0,0,0.08); cursor: pointer;
+        }
+        .gallery-item img {
+            width: 100%; height: 100%; object-fit: cover; display: block;
+            transition: transform 0.4s ease;
+        }
+        .gallery-item:hover img { transform: scale(1.08); }
+        .gallery-caption {
+            position: absolute; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(to top, rgba(27,67,50,0.9), transparent);
+            color: white; padding: 2.2rem 1rem 0.8rem 1rem;
+            font-size: 0.9rem; font-weight: bold;
+        }
+
+        /* Lightbox / carrusel de la galería */
+        .lightbox-overlay {
+            display: none; position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%; background: rgba(0,0,0,0.9);
+            z-index: 1100; justify-content: center; align-items: center;
+        }
+        .lightbox-content {
+            position: relative; max-width: 90vw; max-height: 85vh;
+            display: flex; flex-direction: column; align-items: center;
+        }
+        .lightbox-content img {
+            max-width: 90vw; max-height: 75vh; border-radius: 6px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .lightbox-caption {
+            color: white; margin-top: 1rem; font-weight: bold; text-align: center;
+        }
+        .lightbox-close {
+            position: absolute; top: -40px; right: 0; font-size: 2rem;
+            color: white; background: none; border: none; cursor: pointer;
+        }
+        .lightbox-nav {
+            position: fixed; top: 50%; transform: translateY(-50%);
+            background: rgba(255,255,255,0.15); color: white; border: none;
+            font-size: 2rem; width: 55px; height: 55px; border-radius: 50%;
+            cursor: pointer; transition: background-color 0.2s;
+        }
+        .lightbox-nav:hover { background: rgba(255,255,255,0.3); }
+        .lightbox-prev { left: 20px; }
+        .lightbox-next { right: 20px; }
+        @media (max-width: 600px) {
+            .lightbox-nav { width: 42px; height: 42px; font-size: 1.5rem; }
+            .lightbox-prev { left: 8px; }
+            .lightbox-next { right: 8px; }
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark-green); color: white;
+            padding: 3rem 2rem 1rem 2rem;
+        }
+        .footer-content {
+            max-width: 1000px; margin: 0 auto; display: grid; gap: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); margin-bottom: 2rem;
+        }
+        .footer-section h4 {
+            color: var(--water-green); margin-bottom: 1rem;
+            border-bottom: 1px solid var(--primary-green); padding-bottom: 0.5rem;
+        }
+        .footer-section p { font-size: 0.9rem; color: #d8f3dc; margin-bottom: 0.5rem; }
+        .footer-bottom {
+            text-align: center; padding-top: 1.5rem; border-top: 1px solid var(--primary-green);
+            font-size: 0.85rem; color: #a3b1a3;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-inner">
+            <div class="nav-logo">
+                <img src="logo.jpeg" alt="Logo Eco Timaure C.A.">
+                <span>ECO TIMAURE, C.A.</span>
+            </div>
+            <ul>
+                <li><a href="#inicio">Inicio</a></li>
+                <li><a href="#identidad">Identidad</a></li>
+                <li><a href="#trabajo">Nuestro Trabajo</a></li>
+                <li><a href="#organigrama">Organigrama</a></li>
+                <li><a href="#contacto">Contacto</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <header id="inicio">
+        <img src="logo.jpeg" alt="Logo Eco Timaure C.A." style="height: 110px; width: 110px; border-radius: 50%; background: white; padding: 8px; object-fit: contain; box-shadow: 0 4px 10px rgba(0,0,0,0.25); margin-bottom: 1rem;">
+        <h1>ECO TIMAURE, C.A.</h1>
+        <p>Manejo Integrado de Plagas Doméstico, Agrícola e Industrial</p>
+        <p>Sanitización y Limpieza de Silos y Tanques de Agua</p>
+        <p style="font-size: 0.85rem; opacity: 0.85; margin-top: 0.5rem;">RIF: J-40691591-2</p>
+    </header>
+
+    <svg class="wave-divider" viewBox="0 0 1200 70" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,32 C300,90 900,-20 1200,32 L1200,70 L0,70 Z" fill="#ffffff"></path>
+    </svg>
+
+    <section id="identidad" class="panel">
+        <div class="container">
+            <div class="text-center"><h2 class="panel-title">Nuestra Identidad</h2></div>
+            <div class="info-grid">
+                <div class="card">
+                    <h3 style="color: var(--primary-green)">Misión</h3>
+                    <p>Empresa dedicada al control de plagas, con estándares de la más alta calidad y tecnología; así como con un personal altamente capacitado, con el único objetivo de prestar un mejor servicio a nuestros clientes.</p>
+                </div>
+                <div class="card">
+                    <h3 style="color: var(--primary-green)">Visión</h3>
+                    <p>Consolidarnos como una empresa líder en el servicio de fumigación o manejo integrado de plagas, comprometidos con la seguridad, la veracidad y la calidad total de nuestros servicios.</p>
+                </div>
+                <div class="card">
+                    <h3 style="color: var(--primary-green)">Objeto de la Empresa</h3>
+                    <p>Prestación de servicios generales de mantenimiento higiénico, saneamiento industrial y doméstico, así como la comercialización de productos químicos y equipos de seguridad.</p>
+                </div>
+                <div class="card">
+                    <h3 style="color: var(--primary-green)">Valores</h3>
+                    <img src="Valores.png" alt="Valores de la Empresa" style="width: 100%; height: auto; margin-bottom: 1rem;"></img>
+                    <p><em>Estos son los valores que guían el comportamiento y la toma de decisiones de la empresa.</em></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="trabajo" class="panel">
+        <div class="container-wide">
+            <div class="text-center">
+                <h2 class="panel-title">Nuestro Trabajo</h2>
+                <p style="color: #666; margin-bottom: 2rem;">Evidencia real de nuestros servicios en campo e industria.</p>
+            </div>
+            <div class="gallery-grid">
+                <div class="gallery-item" onclick="openLightbox(0)">
+                    <img src="trabajo-planta-1.jpeg" alt="Saneamiento industrial en planta de alimentos">
+                    <div class="gallery-caption">Saneamiento en planta industrial de alimentos</div>
+                </div>
+                <div class="gallery-item" onclick="openLightbox(1)">
+                    <img src="trabajo-silo-1.jpeg" alt="Mantenimiento de equipo industrial tipo silo">
+                    <div class="gallery-caption">Mantenimiento y limpieza de equipos industriales</div>
+                </div>
+                <div class="gallery-item" onclick="openLightbox(2)">
+                    <img src="trabajo-silo-2.jpeg" alt="Limpieza interna de maquinaria industrial">
+                    <div class="gallery-caption">Limpieza interna de maquinaria (silos y filtros)</div>
+                </div>
+                <div class="gallery-item" onclick="openLightbox(3)">
+                    <img src="trabajo-ductos-1.jpeg" alt="Limpieza de ductos de aire acondicionado">
+                    <div class="gallery-caption">Limpieza y desinfección de ductos de A/C</div>
+                </div>
+                <div class="gallery-item" onclick="openLightbox(4)">
+                    <img src="trabajo-ductos-2.jpeg" alt="Mantenimiento de rejillas de ventilación">
+                    <div class="gallery-caption">Mantenimiento de rejillas de ventilación</div>
+                </div>
+                <div class="gallery-item" onclick="openLightbox(5)">
+                    <img src="trabajo-altura-1.jpeg" alt="Técnico realizando mantenimiento en altura">
+                    <div class="gallery-caption">Mantenimiento e inspección en altura</div>
+                </div>
+                <div class="gallery-item" onclick="openLightbox(6)">
+                    <img src="trabajo-fumigacion-1.jpeg" alt="Fumigación con equipo termonebulizador">
+                    <div class="gallery-caption">Fumigación con equipo termonebulizador</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="lightbox-overlay" id="lightboxOverlay" onclick="closeLightboxOnOverlay(event)">
+        <button class="lightbox-nav lightbox-prev" onclick="event.stopPropagation(); changeLightbox(-1)">&#10094;</button>
+        <div class="lightbox-content" onclick="event.stopPropagation()">
+            <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+            <img id="lightboxImg" src="" alt="">
+            <div class="lightbox-caption" id="lightboxCaption"></div>
+        </div>
+        <button class="lightbox-nav lightbox-next" onclick="event.stopPropagation(); changeLightbox(1)">&#10095;</button>
+    </div>
+
+    <section id="organigrama" class="panel panel-alt">
+        <div class="container-wide">
+            <div class="text-center">
+                <h2 class="panel-title">Estructura Organizativa</h2>
+                <p style="color: #666; margin-bottom: 2rem;">Haz clic en cada departamento para ver el manual de cargos y perfil requerido.</p>
+            </div>
+            
+            <div class="tree">
+                <ul>
+                    <li>
+                        <div class="org-node" onclick="openModal('presidencia')">Presidencia</div>
+                        <ul>
+                            <li>
+                                <div class="org-node" onclick="openModal('gerencia')">Gerencia de Administración y Finanzas</div>
+                                <ul>
+                                    <li>
+                                        <div class="org-node" onclick="openModal('jefatura')">Jefatura de Administración</div>
+                                        <ul>
+                                            <li>
+                                                <div class="org-node" onclick="openModal('contabilidad')">Unidad de Contabilidad</div>
+                                            </li>
+                                            <li>
+                                                <div class="org-node" onclick="openModal('compra')">Unidad de Compras</div>
+                                            </li>
+                                            <li>
+                                                <div class="org-node" onclick="openModal('talento')">Unidad de Talento Humano</div>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <div class="org-node" onclick="openModal('operacion')">Gerencia de Operación</div>
+                                <ul>
+                                    <li>
+                                        <div class="org-node" onclick="openModal('operarios')">Operarios</div>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <div class="cta-band">
+        <h2>¿Necesitas un servicio de fumigación o saneamiento?</h2>
+        <p>Atendemos hogares, comercios e industrias en Barquisimeto y todo el Estado Lara. Contáctanos y recibe atención personalizada.</p>
+        <a class="cta-button" href="https://wa.me/584162509326" target="_blank" rel="noopener">📞 Contactar por WhatsApp</a>
+    </div>
+
+    <footer id="contacto">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>ECO TIMAURE, C.A.</h4>
+                <p>Especialistas en control de plagas y saneamiento ambiental. Soluciones efectivas y seguras con tecnología de punta.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Ubicación</h4>
+                <p>📍 Av. 6 entre Calles 1 y 3, Local Nro. S/N</p>
+                <p>Urb. Rafael Caldera, Barquisimeto</p>
+                <p>Edo. Lara, Zona Postal 3001. Venezuela</p>
+            </div>
+            <div class="footer-section">
+                <h4>Contacto</h4>
+                <p>📞 +58 416-250.9326</p>
+                <p>✉️ ecotimaure@gmail.com</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 ECO TIMAURE, C.A. Todos los derechos reservados.
+            <div style="display: flex; align-items: center; justify-content: center; gap: 0.6rem; margin-top: 0.8rem; opacity: 0.85;">
+                <img src="uptaeb-logo.jpeg" alt="Logo UPTAEB" style="height: 26px; width: auto; background: white; border-radius: 4px; padding: 2px;">
+                <span style="font-size: 0.75rem;">Manual de cargos elaborado en el marco de un proyecto académico UPTAEB</span>
+            </div>
+        </div>
+    </footer>
+
+    <div class="modal-overlay" id="cargoModal" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="close-btn" onclick="forceCloseModal()">&times;</button>
+            <div class="tag" id="modalTag">Manual de Cargos</div>
+            <h2 id="modalTitle" style="text-align: left; margin-top: 0;">Título</h2>
+            <h4 style="color: var(--primary-green)">Objetivo / Misión del Cargo:</h4>
+            <p id="modalMision">Misión aquí...</p>
+            <h4 style="color: var(--primary-green)">Funciones Principales:</h4>
+            <ul id="modalFunciones" style="padding-left: 20px;"></ul>
+            <h4 style="color: var(--primary-green)">Perfil Requerido:</h4>
+            <p id="modalPerfil" style="background: var(--bg-light); padding: 10px; border-left: 4px solid var(--water-green);">Perfil aquí...</p>
+        </div>
+    </div>
+
+    <script>
+        const cargosData = {
+            presidencia: {
+                titulo: "Presidencia",
+                mision: "(Información genérica) Dirección general y planificación estratégica para el cumplimiento del objeto de la empresa, garantizando la rentabilidad y calidad de los servicios.",
+                funciones: [
+                    "Definir los objetivos generales de la empresa.",
+                    "Supervisar el correcto funcionamiento de las gerencias operativas y administrativas.",
+                    "Representar legal y comercialmente a la empresa ante clientes y proveedores clave."
+                ],
+                perfil: "Profesional con amplia experiencia en dirección general y gestión empresarial."
+            },
+            operacion: {
+                titulo: "Gerencia de Operación",
+                mision: "(Información genérica) Dirigir, controlar y supervisar las actividades técnicas y operativas de los servicios de fumigación y saneamiento.",
+                funciones: [
+                    "Planificar las rutas y cronogramas de servicios para los clientes.",
+                    "Supervisar a los operarios en campo y el correcto uso de los insumos químicos.",
+                    "Garantizar que se apliquen las normas sanitarias vigentes en cada intervención."
+                ],
+                perfil: "Profesional en áreas de agronomía, gestión ambiental, seguridad industrial o afines."
+            },
+            operarios: {
+                titulo: "Operarios",
+                mision: "(Información genérica) Ejecutar los servicios de control de plagas y saneamiento ambiental de manera segura y eficiente en las instalaciones del cliente.",
+                funciones: [
+                    "Aplicar los productos químicos según las normas de bioseguridad establecidas.",
+                    "Mantener en óptimas condiciones los equipos de fumigación asignados.",
+                    "Utilizar correctamente los Equipos de Protección Personal (EPP) en todo momento."
+                ],
+                perfil: "Técnico aplicador con certificado de salud y capacitación comprobable en manejo de sustancias tóxicas."
+            },
+            gerencia: {
+                titulo: "Gerencia de Administración y Finanzas",
+                mision: "Garantizar la estabilidad financiera, la eficiencia operativa y el cumplimiento legal de la empresa, supervisando los procesos contables, de compras y talento humano.",
+                funciones: [
+                    "Autorizar presupuesto de compras de insumos químicos y equipos.",
+                    "Supervisar los estados financieros y el flujo de caja.",
+                    "Garantizar el cumplimiento de las obligaciones fiscales y parafiscales.",
+                    "Presentar informes de gestión a la Gerencia General."
+                ],
+                perfil: "Licenciado en Administración, Contaduría o economía. Mínimo 3-5 años de experiencia en cargos gerenciales."
+            },
+            jefatura: {
+                titulo: "Jefatura de Administración",
+                mision: "Garantizar la fluidez, control y eficiencia de la operación diaria en las unidades de compras, contabilidad y talento humano, actuando como unificador operativo.",
+                funciones: [
+                    "Coordinar el flujo de trabajo diario de las unidades.",
+                    "Asegurar que las transacciones cumplan con normativas legales vigentes.",
+                    "Consolidar la información para generar informes de gestión mensuales.",
+                    "Garantizar que cierres contables, compras y nóminas se realicen a tiempo."
+                ],
+                perfil: "Licenciado o T.S.U en Contaduría Pública, Administración de Empresas o carrera afín. 3 a 5 años de experiencia en supervisión."
+            },
+            contabilidad: {
+                titulo: "Unidad de Contabilidad",
+                mision: "Registrar, clasificar y centralizar todas las transacciones económicas, blindando a la empresa ante contingencias fiscales.",
+                funciones: [
+                    "Realizar conciliaciones bancarias y registro de facturación.",
+                    "Declaración de impuesto (IVA, ISLR) y retenciones.",
+                    "Gestión activa de cuentas por cobrar.",
+                    "Elaboración de balances de comprobación."
+                ],
+                perfil: "Licenciado o T.S.U en Contaduría pública con conocimiento de software contable y leyes tributarias."
+            },
+            compra: {
+                titulo: "Unidad de Compras",
+                mision: "Garantizar el abastecimiento oportuno y seguro de insumos críticos y químicos, equilibrando rentabilidad y estándares de seguridad.",
+                funciones: [
+                    "Negociar con proveedores de insecticidas, raticidas y equipos de protección.",
+                    "Controlar el inventario de almacén (entradas y salidas de químicos).",
+                    "Evaluar y seleccionar proveedores basados en certificación de seguridad.",
+                    "Gestionar las órdenes de compra y seguimiento de entregas."
+                ],
+                perfil: "Licenciado o T.S.U en Administración o Logística. Con experiencia en manejo de inventarios y negociaciones."
+            },
+            talento: {
+                titulo: "Unidad de Talento Humano",
+                mision: "Gestionar el ciclo completo del colaborador con enfoque en salud ocupacional, bioseguridad y manejo seguro de sustancias tóxicas.",
+                funciones: [
+                    "Reclutamiento y selección de técnicos aplicadores y personal administrativo.",
+                    "Cálculo de nómina, vacaciones y liquidaciones.",
+                    "Organizar capacitaciones sobre manejo de sustancias tóxicas y bioseguridad.",
+                    "Velar por el cumplimiento de los exámenes médicos ocupacionales."
+                ],
+                perfil: "Licenciado en Recursos Humanos, Relaciones Industriales o Psicología. Conocimiento sólido de legislación laboral y seguridad industrial."
+            }
+        };
+
+        const modal = document.getElementById('cargoModal');
+
+        function openModal(cargoId) {
+            const data = cargosData[cargoId];
+            document.getElementById('modalTitle').textContent = data.titulo;
+            document.getElementById('modalMision').textContent = data.mision;
+            document.getElementById('modalPerfil').textContent = data.perfil;
+            
+            const listaFunciones = document.getElementById('modalFunciones');
+            listaFunciones.innerHTML = '';
+            data.funciones.forEach(func => {
+                const li = document.createElement('li');
+                li.textContent = func;
+                li.style.marginBottom = '8px';
+                listaFunciones.appendChild(li);
+            });
+
+            modal.style.display = 'flex';
+        }
+
+        function closeModal(event) {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        function forceCloseModal() {
+            modal.style.display = 'none';
+        }
+
+        /* ===== Lightbox / carrusel de la galería "Nuestro Trabajo" ===== */
+        const galleryImages = [
+            { src: 'trabajo-planta-1.jpeg', caption: 'Saneamiento en planta industrial de alimentos' },
+            { src: 'trabajo-silo-1.jpeg', caption: 'Mantenimiento y limpieza de equipos industriales' },
+            { src: 'trabajo-silo-2.jpeg', caption: 'Limpieza interna de maquinaria (silos y filtros)' },
+            { src: 'trabajo-ductos-1.jpeg', caption: 'Limpieza y desinfección de ductos de A/C' },
+            { src: 'trabajo-ductos-2.jpeg', caption: 'Mantenimiento de rejillas de ventilación' },
+            { src: 'trabajo-altura-1.jpeg', caption: 'Mantenimiento e inspección en altura' },
+            { src: 'trabajo-fumigacion-1.jpeg', caption: 'Fumigación con equipo termonebulizador' }
+        ];
+
+        let currentLightboxIndex = 0;
+        const lightboxOverlay = document.getElementById('lightboxOverlay');
+        const lightboxImg = document.getElementById('lightboxImg');
+        const lightboxCaption = document.getElementById('lightboxCaption');
+
+        function renderLightbox() {
+            const item = galleryImages[currentLightboxIndex];
+            lightboxImg.src = item.src;
+            lightboxImg.alt = item.caption;
+            lightboxCaption.textContent = item.caption;
+        }
+
+        function openLightbox(index) {
+            currentLightboxIndex = index;
+            renderLightbox();
+            lightboxOverlay.style.display = 'flex';
+        }
+
+        function changeLightbox(step) {
+            currentLightboxIndex = (currentLightboxIndex + step + galleryImages.length) % galleryImages.length;
+            renderLightbox();
+        }
+
+        function closeLightbox() {
+            lightboxOverlay.style.display = 'none';
+        }
+
+        function closeLightboxOnOverlay(event) {
+            if (event.target === lightboxOverlay) closeLightbox();
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (lightboxOverlay.style.display === 'flex') {
+                if (e.key === 'Escape') closeLightbox();
+                if (e.key === 'ArrowRight') changeLightbox(1);
+                if (e.key === 'ArrowLeft') changeLightbox(-1);
+            }
+        });
+    </script>
+</body>
+</html>
